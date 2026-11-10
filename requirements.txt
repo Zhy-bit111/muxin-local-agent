@@ -1,0 +1,8 @@
+# torch 需单独装 CUDA 版本，见 scripts/setup_env.ps1
+transformers>=4.45.0
+peft>=0.13.0
+datasets>=3.0.0
+accelerate>=1.0.0
+modelscope>=1.20.0
+pyyaml>=6.0
+tqdm>=4.66.0

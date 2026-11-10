@@ -1,0 +1,44 @@
+# LoRA 微调配置 · Qwen2.5-1.5B-Instruct
+# 硬件基线：RTX 4060 Laptop 8GB，fp16 不量化
+
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+model_cache: ./models
+
+# ---- LoRA ----
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+# ---- 训练 ----
+learning_rate: 1.5e-4
+num_epochs: 3
+batch_size: 1
+grad_accum: 8
+max_length: 768
+gradient_checkpointing: true
+bf16: true
+lr_scheduler: cosine
+warmup_ratio: 0.03
+weight_decay: 0.01
+max_grad_norm: 1.0
+logging_steps: 10
+save_steps: 100
+seed: 42
+
+# ---- 路径 ----
+train_file: ./data/processed/train.jsonl
+valid_file: ./data/processed/valid.jsonl
+output_dir: ./output/lora-qwen25-1.5b
+
+# ---- 数据字段映射（Alpaca 格式）----
+instruction_field: instruction
+input_field: input
+output_field: output

@@ -1,0 +1,15 @@
+# ---- 环境 ----
+.venv/
+__pycache__/
+*.pyc
+
+# ---- 模型与数据（体积大，不入库）----
+models/
+output/
+data/raw/*.jsonl
+data/processed/*.jsonl
+data/processed/stats.txt
+data/state.json
+logs/*.log
+
+# 注意：data/eval/dev.jsonl 必须入库，它是评测基线，不能再生成
