@@ -26,20 +26,26 @@
 
 ```
 desk-companion/
+├── 慕心.lnk                   双击启动（快捷方式，指向 .venv 里的 pythonw）
+├── 启动慕心.bat               快捷方式失效时的兜底启动脚本
 ├── README.md                  项目总说明（本文件）
 ├── requirements.txt           依赖清单
+├── assets/
+│   └── muxin.ico              程序图标（scripts/make_icon.py 生成）
 ├── configs/
 │   ├── lora_qwen25_1.5b.yaml      LoRA 训练超参（v1）
-│   └── lora_qwen25_1.5b_v2.yaml   同样的超参，只改 output_dir（v2 边界扩充版）
+│   ├── lora_qwen25_1.5b_v2.yaml   同超参，只改 output_dir（v2 边界扩充版）
+│   └── lora_qwen25_1.5b_v3.yaml   同超参，只改 output_dir（v3 闲聊扩写版，当前默认）
 ├── data/
 │   ├── raw/                   原始种子数据（脚本生成的 jsonl）
 │   ├── processed/             清洗后的训练集 / 验证集
 │   └── eval/                  评测集（人工写，绝不进训练）
 ├── app/
+│   ├── muxin_gui.py           **桌面窗口版**（「慕心」，双击即用）
 │   ├── persona.py             人设与兜底话术
 │   ├── llm_client.py          模型加载与生成封装
 │   ├── scheduler.py           定时提醒调度
-│   └── main.py                主入口（对话 + 后台提醒）
+│   └── main.py                命令行版入口（对话 + 后台提醒）
 ├── scripts/
 │   ├── gen_seed_data.py       生成种子训练数据
 │   ├── build_dataset.py       清洗、去重、切分
@@ -47,6 +53,7 @@ desk-companion/
 │   ├── merge_lora.py          合并适配器导出完整模型
 │   ├── eval.py                跑评测集，算通过率
 │   ├── smoke_app.py           真机联调冒烟（6 条闲聊 + 5 类提醒）
+│   ├── make_icon.py           生成程序图标
 │   ├── run_eval_all.ps1       用统一口径串行跑三版评测
 │   └── setup_env.ps1          一键建虚拟环境
 ├── docs/
@@ -61,6 +68,25 @@ desk-companion/
 
 ## 三、快速开始
 
+### 最快：双击「慕心」
+
+桌面上有一个 `慕心` 快捷方式，项目根也有一份。双击即开窗口，不用敲命令：
+
+- 打开后会自动加载 v3 适配器（约 3 秒，首次较慢），顶部显示头像和"陪伴中 · 提醒已开"
+- 底部输入框打字 → 回车或点「发送」就是闲聊
+- 右上「提醒 开/关」一键暂停提醒；状态行显示"下次喝水提醒 HH:MM"
+- 快捷方式直接指向 `.venv\Scripts\pythonw.exe`，**不能移动或删除 `.venv`**；换机器就先跑 `scripts/setup_env.ps1` 再重建快捷方式
+- 快捷方式失效时用项目根的 `启动慕心.bat`
+
+窗口参数（调试用）：
+
+```powershell
+.\.venv\Scripts\python.exe .\app\muxin_gui.py --mock --selftest   # 不加载模型，只把控件布局写进 output/_layout.txt
+.\.venv\Scripts\python.exe .\app\muxin_gui.py --say "今天课太多了，累"  # 自动发一句做端到端联调
+```
+
+### 从零搭环境
+
 ```powershell
 # 0. 所有命令都在项目根执行
 cd E:\AI-Work\desk-companion
@@ -72,23 +98,24 @@ powershell -ExecutionPolicy Bypass -File .\scripts\setup_env.ps1
 .\.venv\Scripts\python.exe .\scripts\gen_seed_data.py
 .\.venv\Scripts\python.exe .\scripts\build_dataset.py
 
-# 3. 训练 LoRA（v2 配置，438 步，约 27 分钟）
-.\.venv\Scripts\python.exe .\scripts\train_lora.py --config configs\lora_qwen25_1.5b_v2.yaml
+# 3. 训练 LoRA（v3 配置：630 步，约 52 分钟）
+.\.venv\Scripts\python.exe .\scripts\train_lora.py --config configs\lora_qwen25_1.5b_v3.yaml
 
 # 4. 评测（基座 / v1 / v2 三版同口径，约 5 分钟）
 powershell -ExecutionPolicy Bypass -File .\scripts\run_eval_all.ps1
 
 # 5. 合并成完整模型（可选，交付或转 GGUF 用）
-.\.venv\Scripts\python.exe .\scripts\merge_lora.py --adapter output/lora-v2 --out output/merged-qwen25-1.5b
+.\.venv\Scripts\python.exe .\scripts\merge_lora.py --adapter output/lora-v3 --out output/merged-qwen25-1.5b
 
-# 6. 启动助手（两种方式任选）
-.\.venv\Scripts\python.exe .\app\main.py                                                # 挂 adapter，默认 v2
+# 6. 命令行版助手（窗口版的替代）
+.\.venv\Scripts\python.exe .\app\main.py                                                # 挂 adapter，默认 v3
 .\.venv\Scripts\python.exe .\app\main.py --model output/merged-qwen25-1.5b --no-adapter  # 用合并模型
 ```
 
 运行起来之后：
 
-- 直接打字就是闲聊；`/status` 看提醒状态，`/quiet` 暂停提醒，`/resume` 恢复，`/quit` 退出
+- 窗口版直接打字就是闲聊；右上按钮暂停提醒
+- 命令行版：`/status` 看提醒状态，`/quiet` 暂停提醒，`/resume` 恢复，`/quit` 退出
 - 喝水默认每 60 分钟提醒一次（`--water-interval` 可改），睡觉默认 23:30（`--sleep-time` 可改）
 
 ## 四、开发路线图
@@ -98,9 +125,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run_eval_all.ps1
 | M0 | 项目骨架、文档、数据规范 | 目录 + 本文档 | 已完成 |
 | M1 | 环境、基座跑通推理 | 基座 fp16 上 cuda，三句真实生成验证 | 已完成（11-09） |
 | M2 | 数据生成与清洗 | train 1161 / valid 128 / eval 60 | 已完成（11-09） |
-| M3 | LoRA 训练 + 评测 | v2 adapter，评测 96.7% | 已完成（11-10） |
+| M3 | LoRA 训练 + 评测 | v1/v2/v3 三个 adapter，评测 96.7% | 已完成（11-10 / 11-11） |
 | M4 | 提醒调度 + 主程序联调 | 真机联调 11/11，合并模型可跑 | 已完成（11-10） |
-| M5 | 打包成开机自启 / 托盘程序 | 日常可用的成品 | 待做（可选） |
+| M5 | 可视化窗口 + 可点击启动 | 「慕心」GUI + 桌面快捷方式 + 图标 | 已完成（11-11） |
+| M6 | 单文件 exe 分发 / 托盘 / 开机自启 | 可分发的成品（待定，见开发日志） | 待做（可选） |
 
 ## 五、日志规范（这个项目要求）
 
@@ -128,13 +156,15 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run_eval_all.ps1
 | 笔记本散热 | 长时间训练降频、可能过热 | 训练时限功耗、单次不超过 1.5 小时、中断续训 |
 | Python 3.13 | 部分包轮子滞后 | 若某包装不上，退到 3.12 建 venv |
 
-## 七、当前状态（2026-11-10）
+## 七、当前状态（2026-11-11）
 
 **已经跑通的**
 - 基座 Qwen2.5-1.5B-Instruct 本地加载：fp16 上 cuda，338 个权重张量约 3 秒
-- **v2 LoRA**：438 步 / **26 分 39 秒** / 最终 loss **0.3611** / 峰值显存 **4.09 GB**（8.59 GB 卡）/ adapter **70.5 MB**
-- **合并模型**：`output/merged-qwen25-1.5b/model.safetensors` **2944.4 MB**，不挂 adapter 可直接加载
+- **v2 LoRA**：438 步 / **26 分 39 秒** / 最终 loss **0.3611** / 峰值显存 4.09 GB / adapter **70.5 MB**
+- **v3 LoRA（默认）**：630 步 / **51 分 58 秒** / 最终 loss **0.4285** / 峰值显存 4.09 GB / adapter **70.5 MB**
+- **合并模型**：`output/merged-qwen25-1.5b/model.safetensors` **2944.4 MB**（是 v2 合并的，未用 v3 重合并）
 - **真机联调**：6 条闲聊 + 5 类提醒全部通过（11/11），推理峰值 2.89–3.01 GB
+- **「慕心」窗口版**：双击桌面快捷方式即开，加载 v3 adapter，能收发消息、提醒调度已接上，窗口 430×660（逻辑）
 
 **评测（60 条留出集，同一个 judge）**
 
@@ -142,14 +172,17 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run_eval_all.ps1
 |---|---|---|---|---|
 | 基座 base | 60.0% | 95.0% | 20.0% | 61.7% |
 | v1 LoRA | 100% | 100% | 73.3% | 93.3% |
-| **v2 LoRA（默认）** | 92.0% | 100% | 100% | **96.7%** |
+| v2 LoRA | 92.0% | 100% | 100% | **96.7%** |
+| **v3 LoRA（默认）** | **100%** | 100% | 86.7% | **96.7%** |
+
+v2 和 v3 总分相同但性质不同：v2 边界面满（15/15）、提醒漏 2 条；v3 提醒召回满（25/25）、边界退 2 条（闲聊样本量放大到 1056 条把边界稀释了）。
 
 **已知局限（别被 96.7% 骗了）**
 
 1. 60 条样本、自动指标只看格式 / 关键词 / 拒答词，**看不懂语义质量**
-2. 闲聊有明显答非所问：「我今天把训练跑完了」→「哈，这也很正常，今天就到这儿吧」；「晚安」→「诶，在呢，今天挺稳的」
-3. 根因：闲聊只有 6 个主题 540 条、output 重复率 32%，模型学到的是高频短语的分布，不是语义对齐
-4. v3 该做的：闲聊主题扩到 15–20 个、重复率压到 20% 以下、temperature 0.7→0.5
+2. 闲聊仍有答偏：「我今天把训练跑完了」→「这也很耗人。回头来接我。」（v3 逐句配对仍未完全救回这种"求认可"语义）
+3. v3 已做的：闲聊主题 6 → 18 个、output 归一化重复率 31.96% → **16.13%**
+4. 下一步方向：边界类补数据（v3 边界 13/15 是短板）、temperature 0.7→0.5 再试
 
 **一条该记住的原则**
 
