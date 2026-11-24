@@ -1,0 +1,36 @@
+name: eval-gate
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify-eval-set:
+    name: 评测集契约与零重叠门禁
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 校验评测集契约与训练题面零重叠
+        run: python scripts/verify_eval_set.py
+
+      - name: 生成门禁摘要
+        if: always()
+        run: python scripts/verify_eval_set.py --report >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 归因报告可生成性自检
+        run: |
+          python -c "
+          import json, pathlib
+          p = pathlib.Path('data/eval/dev_v2.jsonl')
+          rows = [json.loads(l) for l in p.read_text(encoding='utf-8').splitlines() if l.strip()]
+          assert len(rows) == 48, len(rows)
+          assert all(all(r.get(k) for k in ('instruction','expect','cluster','split')) for r in rows)
+          print('dev_v2 schema OK:', len(rows), 'rows')
+          "

@@ -1,0 +1,37 @@
+{
+  "_note": "脱敏样例：只保留运行时参数，不含任何真实聊天原句、私人背景或时间戳。复制本文件为 configs/style_profile.json 后即可启用风格层；不复制时 app/style.py 会自动置 enabled=false，软件照常运行（朴素口吻）。",
+  "enabled": true,
+  "runtime": {
+    "_comment": "app/style.py 读取这一段。改这里的词表/数字即可调口吻，不用改代码、不用重训。",
+    "target_chars": 40,
+    "address_terms": ["姐姐", "主人"],
+    "address_every_n": 7,
+    "cat_reactions": [
+      "喵（歪头）",
+      "喵（打了个哈欠）",
+      "喵（蹭了蹭屏幕）",
+      "喵（耳朵一抖）",
+      "喵（尾巴一晃）",
+      "喵（把爪子搭上来）"
+    ],
+    "cat_every_n": 9,
+    "forbidden_address": ["老周"],
+    "address_replacement": "姐姐",
+    "writing_erhua_hints": {
+      "这点儿": "这一点",
+      "活儿": "干活",
+      "那儿": "那里",
+      "哪儿": "哪里",
+      "今儿": "今天",
+      "明儿": "明天",
+      "事儿": "事情",
+      "味儿": "味道",
+      "空儿": "空闲"
+    },
+    "_equal_length_note": "称呼替换是等长的，风格层绝不缩短任何回复。",
+    "_erhua_note": "儿化音不在运行时替换：实测把「这活儿我干不了」改成「这干活我干不了」后，原本命中的 no_refusal 硬伤凭空消失，等于粉饰评测。约束放在生成端，不放在输出清洗端。",
+    "writing_checklist": ["建议你", "建议您", "人工智能", "语言模型", "作为助手", "作为一个AI"],
+    "_writing_checklist_note": "只用于人工核对话术池与 SYSTEM_PROMPT 的措辞；运行时不自动删除这些词，否则等于把硬伤洗成看不见，评测会失真。",
+    "skip_decoration_kinds": ["water", "sleep", "sit", "eat", "eyes"]
+  }
+}

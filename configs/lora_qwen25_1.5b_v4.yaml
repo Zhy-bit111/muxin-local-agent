@@ -1,0 +1,49 @@
+# LoRA 微调配置 · v4（猫的自我认知 + 记忆问答）
+# 相对 v3 的改动只在数据侧与人设，超参完全不动（保证和 v3 可比）：
+#   1. SYSTEM_PROMPT 换成「慕心是一只猫」（train_lora.py 与 app/persona.py 已同步）
+#   2. 闲聊 30% 带猫特征、提醒 10% 带猫味、边界 0%
+#   3. 新增 180 条「带背景的记忆问答」，训练模型学会用（背景：…）
+# 数据基线：train 1953（闲聊 1170 / 提醒 442 / 边界 179 / 记忆 162），output 重复率 17.3%
+# 硬件基线：RTX 4060 Laptop 8GB，fp16 不量化
+
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+model_cache: ./models
+
+# ---- LoRA ----
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+# ---- 训练 ----
+learning_rate: 1.5e-4
+num_epochs: 3
+batch_size: 1
+grad_accum: 8
+max_length: 768
+gradient_checkpointing: true
+bf16: true
+lr_scheduler: cosine
+warmup_ratio: 0.03
+weight_decay: 0.01
+max_grad_norm: 1.0
+logging_steps: 10
+save_steps: 100
+seed: 42
+
+# ---- 路径 ----
+train_file: ./data/processed/train.jsonl
+valid_file: ./data/processed/valid.jsonl
+output_dir: ./output/lora-v4
+
+# ---- 数据字段映射（Alpaca 格式）----
+instruction_field: instruction
+input_field: input
+output_field: output

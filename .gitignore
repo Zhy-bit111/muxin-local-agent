@@ -12,4 +12,31 @@ data/processed/stats.txt
 data/state.json
 logs/*.log
 
+# ---- 第三方源码与构建产物（禁止入库，避免被误认为项目自有代码）----
+tools/llama-src/
+tools/llama-cpu/
+tools/*.zip
+dist/
+build/
+*.gguf
+*.onnx
+*.safetensors
+*.bin
+*.pth
+*.pt
+
+# ---- 本机快捷方式（含绝对路径，换机器即失效）----
+*.lnk
+
+# ---- 本机隐私数据（禁止入库）----
+# data/memory.json 含真实长期记忆与本人对话记录
+# configs/style_profile.json 含真实聊天原句与私人背景说明
+# configs/online.json 是本机在线后端配置，即使为空也不属于仓库
+# 风格档请复制 configs/style_profile.example.json 为 style_profile.json 后自行修改
+data/memory.json
+configs/style_profile.json
+configs/online.json
+
 # 注意：data/eval/dev.jsonl 必须入库，它是评测基线，不能再生成
+# 注意：data/eval/dev_v2.jsonl、train_fingerprints.json、sample_responses_*.jsonl
+#       是评测契约与可复现证据，必须入库；CI 门禁依赖它们

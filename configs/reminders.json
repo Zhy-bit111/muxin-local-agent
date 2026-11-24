@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "random": true,
+  "interval_min": 40,
+  "interval_max": 85,
+  "min_gap_min": 20,
+  "kinds": ["water", "sit", "eyes", "eat"],
+  "kind_weights": {
+    "water": 5,
+    "sit": 2,
+    "eyes": 2,
+    "eat": 1
+  },
+  "sleep_window": ["22:50", "23:40"],
+  "quiet_hours": ["00:30", "08:00"],
+  "frequency": "正常",
+  "_note": "主动提醒完全在本机定时触发，与 configs/online.json 的在线能力无关；不启用在线、断网、甚至没加载模型时，事件照样产生，话术由 app/persona.py 的 FALLBACK 兜住。interval_* 单位为分钟，quiet_hours 为免打扰时段（跨零点写法也支持）。"
+}

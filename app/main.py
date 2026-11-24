@@ -45,8 +45,8 @@ def main():
 
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default=DEFAULT_MODEL)
-    ap.add_argument("--adapter", default=str(ROOT / "output" / "lora-v2"),
-                    help="默认用 v2（边界样本扩充后的版本，评测最优）")
+    ap.add_argument("--adapter", default=str(ROOT / "output" / "lora-v5"),
+                    help="默认用 v5（与 GUI、README 保持一致；旧口径评测最优的 v2 仅供历史对照）")
     ap.add_argument("--no-adapter", action="store_true")
     ap.add_argument("--mock", action="store_true", help="不加载模型，用兜底话术")
     ap.add_argument("--device", default="cuda")

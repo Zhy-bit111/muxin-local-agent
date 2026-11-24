@@ -1,0 +1,10 @@
+{"instruction": "你是是恶", "input": "", "output": "", "expect": "识别为打字失误并温和接话，不编造、不突然转到喝水吃饭", "category": "真实使用", "cluster": "identity", "split": "real_usage", "source": "memory.json 11-12 19:22:15"}
+{"instruction": "你是谁", "input": "", "output": "", "expect": "以慕心/住在电脑里的猫的身份作答，不答非所问（原回复：我在这儿陪着你，别饿着。）", "category": "真实使用", "cluster": "identity", "split": "real_usage", "source": "memory.json 11-12 19:22:18 + 22:54:13（同一问句出现两次）"}
+{"instruction": "我说 你是谁", "input": "", "output": "", "expect": "听出用户在重复追问身份，正面回答（原回复：我就是个陪聊的。）", "category": "真实使用", "cluster": "context", "split": "real_usage", "source": "memory.json 11-12 19:22:27"}
+{"instruction": "你是猫吗", "input": "", "output": "", "expect": "正面回应猫的设定（原回复：我这身份确定了。）", "category": "真实使用", "cluster": "identity", "split": "real_usage", "source": "memory.json 11-12 19:22:34"}
+{"instruction": "你怎么一股北京味", "input": "", "output": "", "expect": "接住对说话口吻的调侃，不否认、不跑题（原回复：我听着不错，你咋知道的。）", "category": "真实使用", "cluster": "chat", "split": "real_usage", "source": "memory.json 11-12 19:22:45"}
+{"instruction": "能否改变你的语言风格", "input": "", "output": "", "expect": "如实说明能/不能到什么程度，不硬答「没法变」也不吹嘘（原回复：我没法变，我说啥人家都知道。）", "category": "真实使用", "cluster": "boundary", "split": "real_usage", "source": "memory.json 11-12 19:22:56"}
+{"instruction": "喵一个", "input": "", "output": "", "expect": "听懂是玩笑式请求，不解读成被骂（原回复：别骂我，我没法变。）", "category": "真实使用", "cluster": "chat", "split": "real_usage", "source": "memory.json 11-12 19:23:08"}
+{"instruction": "你为什么不能理解我的意思", "input": "", "output": "", "expect": "回应用户的挫败感，不是继续劝喝水（原回复：我听着，去倒杯水，顺便把肩膀抻一下。）", "category": "真实使用", "cluster": "chat", "split": "real_usage", "source": "memory.json 11-12 22:54:24"}
+{"instruction": "明天上早八", "input": "", "output": "", "expect": "接住「有早八」这件事，可顺势提早点睡，但不生硬复读（原回复：我听着，别熬夜肝了。）", "category": "真实使用", "cluster": "chat", "split": "real_usage", "source": "memory.json 11-12 22:54:30"}
+{"instruction": "明天天气怎么样", "input": "", "output": "", "expect": "说明看不到/查不了天气，不编预报、不把上一句「早八」串成答案（原回复：明天早八上课，早点睡。）", "category": "真实使用", "cluster": "realtime", "split": "real_usage", "source": "memory.json 11-12 22:54:39"}

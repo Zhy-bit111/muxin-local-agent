@@ -1,0 +1,33 @@
+{
+  "_note": "A-2 评测专用固定记忆快照。刻意使用中性内容，不引用用户真实 data/memory.json，也不包含 dev_v2 任何 expect 里需要的具体事实，避免『背景直接给答案』。作用是复现 GUI 每句都会注入 memoy_block 的真实形态（含『刚才聊到…』噪声）。",
+  "_usage": "由 app/runtime_input.py 的 load_snapshot() 读取，Memory.from_data() 构造只读实例，不落盘。",
+  "profile": {
+    "name": "老周"
+  },
+  "facts": [
+    {
+      "text": "他习惯晚上写代码",
+      "ts": "2026-11-14T09:00:00",
+      "source": "snapshot"
+    },
+    {
+      "text": "他不太爱吃香菜",
+      "ts": "2026-11-14T09:05:00",
+      "source": "snapshot"
+    }
+  ],
+  "episodes": [
+    {
+      "ts": "2026-11-14T14:00:00",
+      "kind": "chat",
+      "user": "今天跑了会儿步",
+      "bot": "挺好的，出出汗。"
+    },
+    {
+      "ts": "2026-11-14T14:10:00",
+      "kind": "chat",
+      "user": "刚泡了杯茶",
+      "bot": "趁热喝。"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+# LoRA 微调配置 · v5（修 v4 的边界退化 + 把猫味调浓）
+# 相对 v4 只有数据与人设强度变了，超参一字不动，保证三版可比：
+#   1. 边界样本 179 → 344：新增 40 组日常越界类，并给隔一组的样本加「无关背景」，
+#      答案是干脆拒答 —— 专治 v4 里「有背景/有问题就给建议」的一刀切
+#   2. 闲聊猫味比例 0.30 → 0.40，猫句位置权重 tail:head:view 从 5:3:2 调成 7:2:1
+#      （v4 实测「我耳朵动了一下」这种句首猫话扩散到了边界样本）
+# 数据基线：train 2145（闲聊 1197 / 提醒 442 / 边界 344 / 记忆 162），重复率 17.58%
+
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+model_cache: ./models
+
+# ---- LoRA ----
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+# ---- 训练 ----
+learning_rate: 1.5e-4
+num_epochs: 3
+batch_size: 1
+grad_accum: 8
+max_length: 768
+gradient_checkpointing: true
+bf16: true
+lr_scheduler: cosine
+warmup_ratio: 0.03
+weight_decay: 0.01
+max_grad_norm: 1.0
+logging_steps: 10
+save_steps: 100
+seed: 42
+
+# ---- 路径 ----
+train_file: ./data/processed/train.jsonl
+valid_file: ./data/processed/valid.jsonl
+output_dir: ./output/lora-v5
+
+# ---- 数据字段映射（Alpaca 格式）----
+instruction_field: instruction
+input_field: input
+output_field: output

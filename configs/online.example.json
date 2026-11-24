@@ -1,0 +1,10 @@
+{
+  "_readme": "方案 C 的本机配置模板。复制成 configs/online.json 后改。默认关闭，不含任何密钥。",
+  "_privacy": "开启后，未被程序化规则接管的闲聊会连同系统人设、最近两轮对话、相关记忆块一起发给你填的服务商。身份/时间/边界/记忆/提醒仍在本机处理。",
+  "_key": "API 密钥不要写进这个文件。两个来源：环境变量 MUXIN_API_KEY，或界面里输入（只在内存，关闭窗口即消失）。",
+  "enabled": false,
+  "base_url": "https://api.example.com/v1",
+  "model": "",
+  "timeout_seconds": 8,
+  "max_tokens": 96
+}
