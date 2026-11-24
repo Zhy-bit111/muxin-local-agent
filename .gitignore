@@ -40,3 +40,10 @@ configs/online.json
 # 注意：data/eval/dev.jsonl 必须入库，它是评测基线，不能再生成
 # 注意：data/eval/dev_v2.jsonl、train_fingerprints.json、sample_responses_*.jsonl
 #       是评测契约与可复现证据，必须入库；CI 门禁依赖它们
+
+# ---- 本地预览/演示辅助文件（不属于项目本体，不入库）----
+启动慕心.bat
+慕心.lnk
+桌宠_点这个.bat
+桌宠效果_点这个.html
+盲评表_点这个.html
